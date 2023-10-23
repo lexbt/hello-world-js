@@ -14,19 +14,21 @@ steps:
   inputs:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
-
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install & build'
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/lvl3-hello.zip'
+    replaceExistingArchive: true
 - task: Veracode@3
   inputs:
     ConnectionDetailsSelection: 'Credentials'
     apiId: 'a6a7f300a8a280637572b3492fb7a13a'
     apiKey: 'e2459e05051a252eadee7d47ae022e94956841b2eb6c624d3ceab0897e7640f7dbe6a83634072fd8785c78d37c5bb2be79ec8bc7011ef1792b0c981dc6542cf8'
-    veracodeAppProfile: '$(system.teamProject)'
+    veracodeAppProfile: 'Lvl3-Veracode'
     version: '$(build.buildNumber)'
-    filepath: '$(build.artifactstagingdirectory)'
+    filepath: '$(Build.ArtifactStagingDirectory)/lvl3-hello.zip'
     createProfile: true
     failBuildIfUploadAndScanBuildStepFails: true
     failBuildOnPolicyFail: true
